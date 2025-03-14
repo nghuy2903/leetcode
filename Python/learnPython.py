@@ -93,14 +93,35 @@ class Solution(object):
 
         return longest           
 
+    def convert(self, s, numRows):
+        """
+        :type s: str
+        :type numRows: int
+        :rtype: str
+        """
+        if numRows == 1 or len(s) == 1 or numRows >= len(s) :
+            return s
+        res = [""]*numRows
+        index, step = 0, 1 #step is move up or down
+        for char in s:
+            res[index] += char
+            if index == 0:
+                step = 1
+            elif index == numRows -1:
+                step = -1
+            index += step
+        return "".join(res)
 
 
 
 solution = Solution()
 
-s = "babad"
 
-print(solution.longestPalindrome(s))
+
+s = "AB"
+numRows = 1
+string = solution.convert(s, numRows)
+print(string)
 
 
 
