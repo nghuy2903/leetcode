@@ -126,15 +126,70 @@ class Solution(object):
             else:
                 right -= 1
         return maxWater
+    
+    def intToRoman(self, num):
+        """
+        :type num: int
+        :rtype: str
+        """
+        values = [
+            (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"),
+            (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
+            (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")
+        ]
+
+        roman = ""
+        
+        for value, symbol in values:
+            while num >= value:
+                num -= value
+                roman += symbol  # Append the corresponding Roman numeral
+
+        return roman
+    
+    def fourSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        nums.sort()  # Sort the array to use two-pointer efficiently
+        res = []
+        n = len(nums)
+
+        for i in range(n - 3):  # First number
+            if i > 0 and nums[i] == nums[i - 1]:  # Skip duplicates
+                continue
+            for j in range(i + 1, n - 2):  # Second number
+                if j > i + 1 and nums[j] == nums[j - 1]:  # Skip duplicates
+                    continue
+                
+                left, right = j + 1, n - 1  # Two-pointer technique
+                while left < right:
+                    total = nums[i] + nums[j] + nums[left] + nums[right]
+                    if total == target:
+                        res.append([nums[i], nums[j], nums[left], nums[right]])
+                        # Skip duplicates
+                        while left < right and nums[left] == nums[left + 1]:
+                            left += 1
+                        while left < right and nums[right] == nums[right - 1]:
+                            right -= 1
+                        left += 1
+                        right -= 1
+                    elif total < target:
+                        left += 1
+                    else:
+                        right -= 1
+        return res
+        
+
 
 solution = Solution()
 
+nums = [1,0,-1,0,-2,2]
+target = 0
 
 
-s = "AB"
-numRows = 1
-string = solution.convert(s, numRows)
-print(string)
 
 
 
