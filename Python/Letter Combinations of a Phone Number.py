@@ -40,7 +40,37 @@ class Solution(object):
             queue = new_queue
 
         return queue
-       
+    
+    def removeNthFromEnd(self, head, n):
+        """
+        :type head: Optional[ListNode]
+        :type n: int
+        :rtype: Optional[ListNode]
+        """
+        count = 1
+        temp = head
+        prev = ListNode(0, head)
+        
+        while temp.next is not None:
+            count += 1
+            temp = temp.next
+
+        if count == n:
+            return head.next
+
+        temp = head
+        while temp is not None:
+            if count == n:
+                prev.next = temp.next
+                return head
+            prev = temp
+            temp = temp.next
+            count -= 1
+
+class ListNode(object):
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next      
 
 solution = Solution()
 a = solution.letterCombinations("23")
