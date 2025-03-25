@@ -26,7 +26,24 @@ class Solution(object):
 
         return result
 
-solution = Solution()   
-n = 3
+    def climbStairs(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n <= 3:
+            return n
+        prev1, prev2, cur = 2, 1 , 0
+        for i in range(3, n+1):
+            
+            cur = prev1 + prev2
+            prev2 = prev1
+            prev1 = cur
+        return cur
 
-print(solution.generateParenthesis(n))
+solution = Solution()   
+n = 5
+
+print(solution.climbStairs(5))
+
+
