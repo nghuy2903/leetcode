@@ -67,6 +67,22 @@ class Solution(object):
             temp = temp.next
             count -= 1
 
+    def deleteDuplicates(self, head):
+        """
+        :type head: Optional[ListNode]
+        :rtype: Optional[ListNode]
+        """
+        if not head:
+            return None
+        prev, curr = head, head.next
+        while curr:
+            if prev.val == curr.val:
+                prev.next = curr.next
+            else:
+                prev = curr
+            curr = curr.next
+        return head
+
 class ListNode(object):
     def __init__(self, val=0, next=None):
         self.val = val
