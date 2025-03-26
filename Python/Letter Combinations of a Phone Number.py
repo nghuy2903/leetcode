@@ -82,6 +82,19 @@ class Solution(object):
                 prev = curr
             curr = curr.next
         return head
+    
+    def merge(self, nums1, m, nums2, n):
+        """
+        :type nums1: List[int]
+        :type m: int
+        :type nums2: List[int]
+        :type n: int
+        :rtype: None Do not return anything, modify nums1 in-place instead.
+        """
+        nums1[:] = nums1[:m] + nums2[:n]  # Merge meaningful elements
+        nums1.sort()
+
+        return nums1
 
 class ListNode(object):
     def __init__(self, val=0, next=None):
@@ -89,5 +102,12 @@ class ListNode(object):
         self.next = next      
 
 solution = Solution()
-a = solution.letterCombinations("23")
-print(a)
+nums1 = [1,2,3,0,0,0]
+m = 3
+n = 3
+nums2 = [2,5,6]
+# res = solution.merge(nums1, m, nums2, n)
+# print(res)
+
+nums2[:] = [2]
+print(nums2)
