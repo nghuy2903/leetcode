@@ -181,13 +181,33 @@ class Solution(object):
                     else:
                         right -= 1
         return res
+    
+    def generate(self, numRows):
+        """
+        :type numRows: int
+        :rtype: List[List[int]]
+        """
+        triangle = [[1]]
+    
+    # Generate subsequent rows
+        for i in range(1, numRows):
+            prev_row = triangle[-1]  # Get the previous row
+            new_row = [1]  # Every row starts with 1
+            
+            # Calculate middle elements
+            for j in range(1, i):
+                new_row.append(prev_row[j-1] + prev_row[j])
+            
+            new_row.append(1)  # Every row ends with 1
+            triangle.append(new_row)
+        
+        return triangle
         
 
 
 solution = Solution()
 
-nums = [1,0,-1,0,-2,2]
-target = 0
+print(solution.generate(5))
 
 
 
