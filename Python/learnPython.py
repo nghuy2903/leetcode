@@ -218,6 +218,34 @@ class Solution(object):
 
         inorder(root)
         return result
+    
+    def recoverTree(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: None Do not return anything, modify root in-place instead.
+        """
+        self.first = self.second = self.prev = None
+
+        def inorder(node):
+            if not node:
+                return
+            
+            inorder(node.left)
+
+            if self.prev and node.val < self.prev.val:
+                if not self.first:
+                    self.first = self.prev
+                self.second = node
+            
+            self.prev = node
+
+            inorder(node.right)
+
+        inorder(root)
+
+        # Swap the values of the two incorrect nodes
+        if self.first and self.second:
+            self.first.val, self.second.val = self.second.val, self.first.val
         
 
 
