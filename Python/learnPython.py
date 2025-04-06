@@ -202,6 +202,22 @@ class Solution(object):
             triangle.append(new_row)
         
         return triangle
+
+    def inorderTraversal(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: List[int]
+        """
+        result = []
+
+        def inorder(node):
+            if node:
+                inorder(node.left)
+                result.append(node.val)
+                inorder(node.right)
+
+        inorder(root)
+        return result
         
 
 
