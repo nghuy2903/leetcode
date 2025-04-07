@@ -1,5 +1,10 @@
 import math
 
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.word = None
+
 class Solution(object):
     def strStr(self, haystack, needle):
         """
@@ -270,7 +275,52 @@ class Solution(object):
 
         return True
     
+    def findWords(self, board, words):
+        """
+        :type board: List[List[str]]
+        :type words: List[str]
+        :rtype: List[str]
+        """
+        root = TrieNode()
+        for word in words:
+            node = root
+            for char in word:
+                if char not in node.children:
+                    node.children[char] = TrieNode()
+                node = node.children[char]
+            node.word = word  # đánh dấu từ hoàn chỉnh
+
+        rows, cols = len(board), len(board[0])
+        result = []
+
+        def dfs(r, c, node):
+            char = board[r][c]
+            if char not in node.children:
+                return
+
+            next_node = node.children[char]
+            if next_node.word:
+                result.append(next_node.word)
+                next_node.word = None  # tránh trùng lặp
+
+            board[r][c] = "#"  # đánh dấu đã đi qua
+            for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols and board[nr][nc] != "#":
+                    dfs(nr, nc, next_node)
+            board[r][c] = char  # khôi phục lại ký tự sau DFS
+
+            # Xóa nhánh đã dùng xong để tối ưu bộ nhớ
+            if not next_node.children:
+                node.children.pop(char)
+
+        for r in range(rows):
+            for c in range(cols):
+                dfs(r, c, root)
+
+        return result
     
+
         
 
 
