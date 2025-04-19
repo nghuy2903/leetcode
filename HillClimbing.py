@@ -9,11 +9,11 @@ class TreeNode:
     def add_child(self, child_node):
         self.children.append(child_node)
     
-def BestFirstSearch(root : TreeNode, goal):
+def HillClimbing(root : TreeNode, goal):
     queue = deque()
     queue.append(root)
     visited = set()
-    print('Current Node' + '\tNeighbor' + '\tList')
+    print('Current Node' + '\tneighbor' +  '\tList')
     while(queue):
         current = queue.popleft()
         nameNode = current.name
@@ -21,13 +21,16 @@ def BestFirstSearch(root : TreeNode, goal):
         if nameNode == goal:
             print("Goal")
             return
-        neighborOfCurrent = deque()
+        
         visited.add(current.name)
+        neighborOfCurrent = deque()
         for child in current.children:
             if child.name not in visited:
-                queue.append(child)
-        queue = deque(sorted(queue, key=lambda node: node.heuristic))
-        print(f'{nameNode}\t\t{[n.name for n in queue]}\t\t{[n.name for n in queue]}')
+                neighborOfCurrent.append(child)
+        neighborOfCurrent = deque(sorted(neighborOfCurrent, key=lambda node: node.heuristic, reverse=True))
+        for node in neighborOfCurrent:
+            queue.appendleft(node)
+        print(f'{nameNode}\t\t{[n.name for n in neighborOfCurrent]}\t\t{[n.name for n in queue]}')
     print('Not find {goal}')
 # Example Tree
 #        A(6)
@@ -55,4 +58,4 @@ B.add_child(E)
 C.add_child(F)
 E.add_child(G)
 
-BestFirstSearch(A, 'G')
+HillClimbing(A, 'G')
