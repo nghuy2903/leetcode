@@ -58,4 +58,4 @@ B.add_child(E)
 C.add_child(F)
 E.add_child(G)
 
-HillClimbing(A, 'G')
+HillClimbing(A, 'I')
