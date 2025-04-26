@@ -13,7 +13,7 @@ def BestFirstSearch(root : TreeNode, goal):
     queue = deque()
     queue.append(root)
     visited = set()
-    print('Current Node' + '\tNeighbor' + '\tList')
+    print(f'{"Current Node".ljust(15)}{"Neighbor".ljust(20)}{"List"}')
     while(queue):
         current = queue.popleft()
         nameNode = current.name
@@ -26,9 +26,12 @@ def BestFirstSearch(root : TreeNode, goal):
         for child in current.children:
             if child.name not in visited:
                 queue.append(child)
+                neighborOfCurrent.append(child)
         queue = deque(sorted(queue, key=lambda node: node.heuristic))
-        print(f'{nameNode}\t\t{[n.name for n in queue]}\t\t{[n.name for n in queue]}')
-    print('Not find {goal}')
+        print(f'{nameNode.ljust(15)}'
+              f'{str([n.name for n in neighborOfCurrent]).ljust(20)}'
+              f'{[n.name for n in queue]}')
+    print(f'Not find {goal}')
 # Example Tree
 #        A(6)
 #       /    \

@@ -13,7 +13,7 @@ def HillClimbing(root : TreeNode, goal):
     queue = deque()
     queue.append(root)
     visited = set()
-    print('Current Node' + '\tneighbor' +  '\tList')
+    print(f'{"Current Node".ljust(15)}{"Neighbor".ljust(20)}{"List"}')
     while(queue):
         current = queue.popleft()
         nameNode = current.name
@@ -27,11 +27,13 @@ def HillClimbing(root : TreeNode, goal):
         for child in current.children:
             if child.name not in visited:
                 neighborOfCurrent.append(child)
-        neighborOfCurrent = deque(sorted(neighborOfCurrent, key=lambda node: node.heuristic, reverse=True))
-        for node in neighborOfCurrent:
+        neighborOfCurrent = deque(sorted(neighborOfCurrent, key=lambda node: node.heuristic))
+        for node in reversed(neighborOfCurrent):
             queue.appendleft(node)
-        print(f'{nameNode}\t\t{[n.name for n in neighborOfCurrent]}\t\t{[n.name for n in queue]}')
-    print('Not find {goal}')
+        print(f'{nameNode.ljust(15)}'
+              f'{str([n.name for n in neighborOfCurrent]).ljust(20)}'
+              f'{[n.name for n in queue]}')
+    print(f'Not find {goal}')
 # Example Tree
 #        A(6)
 #       /    \
@@ -58,4 +60,5 @@ B.add_child(E)
 C.add_child(F)
 E.add_child(G)
 
-HillClimbing(A, 'I')
+HillClimbing(A, 'G')
+
