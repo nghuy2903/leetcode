@@ -6,27 +6,28 @@ class TreeNode:
     def __init__(self, name, heuristic):
         self.name = name
         self.heuristic = heuristic
-        self.children = []
-
+        self.children = [] #danh sách node con
+    #Thêm vào danh sách chứa node con - tupple(node con, g)
     def add_child(self, child_node, g):
         self.children.append((child_node, g))
     
 def BranchAndBound(root : TreeNode, goal):
+    #List node
     queue = deque()
-    queue.append((root, 0, root.heuristic))
-    cost = float(inf)
-    flag = False
+    queue.append((root, 0, 0))
+    cost = float(inf) #biến lưu đường đi cần tìm
+    flag = False #Cờ để dễ phân biệt được đã tìm được node cần tìm hay chưa
     print(f'{"Current Node".ljust(15)}{"Neighbor".ljust(45)}{"List"}')
     while(queue):
 
         current, cost_current, f_current = queue.popleft()
         nameNode = current.name
-        
+        #Nếu tìm thấy node cần tìm lần, xét điều kiện để cập nhật cost tối ưu hơn và bật cờ lên để bắt đầu loại bỏ các node không tối ưu trong List
         if nameNode == goal:
             if cost_current < cost:
                 cost = cost_current
                 flag = True
-            
+        #Điều kiện để loại bỏ node trong List: Đã tìm được đích, và cost(node of List) > cost(goal)
         if flag == True and cost_current > cost:
             print(
                     f'{current.name.ljust(15)}'
@@ -36,11 +37,14 @@ def BranchAndBound(root : TreeNode, goal):
             continue
 
         neighborOfCurrent = deque()
+
         for child, cost_child in current.children:
             total_cost = cost_child + cost_current
             f = total_cost + child.heuristic
             neighborOfCurrent.append((child, total_cost, f))
+        #sort danh sách neighbor theo hàm f
         neighborOfCurrent = deque(sorted(neighborOfCurrent, key=lambda x : x[2] ))
+        #Duyệt ngược danh sách neighbor để thêm vào List cho đúng
         for node in reversed(neighborOfCurrent):
             queue.appendleft(node)
         print(

@@ -4,37 +4,41 @@ class TreeNode:
     def __init__(self, name, heuristic):
         self.name = name
         self.heuristic = heuristic
-        self.children = []
-
+        self.children = [] #danh sách node con
+    #Thêm vào danh sách chứa node con - tupple(node con, g)
     def add_child(self, child_node, g):
         self.children.append((child_node, g))
     
 def AStar(root : TreeNode, goal):
+    #List node
     queue = deque()
-    queue.append((root, 0, root.heuristic))
-    visited = set()
-    print(f'{"Current Node".ljust(15)}{"Neighbor".ljust(30)}{"List"}')
+    queue.append((root, 0, 0)) #danh sách lưu trữ dạng (node, g, f)
+    print(f'{"Current Node".ljust(15)}{"Neighbor".ljust(45)}{"List"}')
     while(queue):
-        current, cost_current, f_current = queue.popleft()
+        current, g_current, f_current = queue.popleft()
         nameNode = current.name
-        
+        #Nếu tìm thấy node, in ra và dừng lại
         if nameNode == goal:
             print(f'{nameNode.ljust(15)}'
-                  f'Goal: {root.name} -> {goal} : {cost_current}'
+                  f'Goal: {root.name} -> {goal} : {g_current}'
                 )
             return
+        #Danh sách node Neighbor of u
         neighborOfCurrent = deque()
-        visited.add(current.name)
+        #Duyệt từng tupple (node con, g) trong danh sách node con 
         for child, cost_child in current.children:
-            if child.name not in visited:
-                total_cost = cost_child + cost_current
-                f = total_cost + child.heuristic
-                queue.append((child, total_cost, f))
-                neighborOfCurrent.append((child, total_cost, f))
+            # g = g(child) + g(current)
+            total_cost = cost_child + g_current
+            # f = g + h(child)
+            f = total_cost + child.heuristic
+            queue.append((child, total_cost, f))
+            neighborOfCurrent.append((child, total_cost, f))
+
+        #sort List theo f
         queue = deque(sorted(queue, key=lambda x : x[2]))
         print(
             f'{nameNode.ljust(15)}'
-            f'{str([f"{n.name}:{c}" for n, c, _ in neighborOfCurrent]).ljust(30)}'
+            f'{str([f"{n.name}:{c}" for n, c, _ in neighborOfCurrent]).ljust(45)}'
             f'{[n.name for n, _, _ in queue]}'
         )
     print(f'Not find {goal}')
