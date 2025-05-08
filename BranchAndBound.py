@@ -28,11 +28,11 @@ def BranchAndBound(root : TreeNode, goal):
                 cost = cost_current
                 flag = True
         #Điều kiện để loại bỏ node trong List: Đã tìm được đích, và cost(node of List) > cost(goal)
-        if flag == True and cost_current > cost:
+        if flag == True and f_current > cost:
             print(
                     f'{current.name.ljust(15)}'
-                    f'{"cost_current: " + str(cost_current) + " > cost: " + str(cost):<45}'
-                    f'{[n.name for n, _, _ in queue]}'
+                    f'{"f_current: " + str(f_current) + " > cost: " + str(cost):<45}'
+                    f'{str([f"{n.name}:{f}" for n, c, f in queue])}'
                 )
             continue
 
@@ -49,8 +49,8 @@ def BranchAndBound(root : TreeNode, goal):
             queue.appendleft(node)
         print(
             f'{nameNode.ljust(15)}'
-            f'{str([f"{n.name}:{c}" for n, c, _ in neighborOfCurrent]).ljust(45)}'
-            f'{[n.name for n, _, _ in queue]}'
+            f'{str([f"{n.name}:{f}" for n, c, f in neighborOfCurrent]).ljust(45)}'
+            f'{str([f"{n.name}:{f}" for n, c, f in queue])}'
         )
 
     if flag:

@@ -1,0 +1,145 @@
+import copy
+
+# Ký tự đại diện
+PACMAN = 'P'
+FOOD = 'F'
+GHOST = 'G'
+EMPTY = '.'
+
+# Ma trận 3x3 ban đầu
+initial_board = [
+    [PACMAN, EMPTY, FOOD],
+    [EMPTY, FOOD, EMPTY],
+    [EMPTY, GHOST, EMPTY]
+]
+
+# Các hướng di chuyển
+directions = [(-1,0), (1,0), (0,-1), (0,1)]  # lên, xuống, trái, phải
+
+# Tìm vị trí của một ký tự trên bảng
+def find_pos(board, target):
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == target:
+                return i, j
+    return None
+
+# In trạng thái bàn cờ
+def print_board(board):
+    for row in board:
+        print(' '.join(row))
+    print()
+
+def manhattan(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+def heuristic(board):
+    pacman = find_pos(board, PACMAN)
+    ghost = find_pos(board, GHOST)
+
+    # Nếu Pacman đã bị bắt
+    if pacman is None or (ghost is not None and pacman == ghost):
+        return -100
+
+    # Nếu ăn hết tất cả thức ăn
+    food_positions = []
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == FOOD:
+                food_positions.append((i, j))
+
+    if not food_positions:
+        return 100
+
+    # Tổng khoảng cách tới thức ăn
+    total_food_distance = sum(manhattan(pacman, food) for food in food_positions)
+
+    # Khoảng cách tới ma
+    ghost_distance = manhattan(pacman, ghost) if ghost else 999
+
+    # Trọng số: ăn thức ăn và tránh ma
+    score = -2 * total_food_distance + 5 * ghost_distance
+
+    return score
+
+def evaluate(board):
+    return heuristic(board)
+
+
+
+# Lấy các trạng thái kế tiếp cho một người chơi
+def get_next_states(board, player):
+    states = []
+    pos = find_pos(board, player)
+    for dx, dy in directions:
+        nx, ny = pos[0]+dx, pos[1]+dy
+        if 0 <= nx < 3 and 0 <= ny < 3:
+            if player == PACMAN and board[nx][ny] == GHOST:
+                continue  # Pacman không đi vào ma (bị bắt)
+            new_board = copy.deepcopy(board)
+            new_board[pos[0]][pos[1]] = EMPTY
+            new_board[nx][ny] = player
+            states.append(new_board)
+    return states
+
+
+# Thuật toán Minimax với Alpha-Beta
+def minimax(board, depth, alpha, beta, is_maximizing):
+    if depth == 0 or evaluate(board) in [100, -100]:
+        return evaluate(board), board
+
+    if is_maximizing:
+        max_eval = float('-inf')
+        best_state = None
+        for state in get_next_states(board, PACMAN):
+            eval, _ = minimax(state, depth-1, alpha, beta, False)
+            if eval > max_eval:
+                max_eval = eval
+                best_state = state
+            alpha = max(alpha, eval)
+            if beta <= alpha:
+                break
+        return max_eval, best_state
+    else:
+        min_eval = float('inf')
+        best_state = None
+        for state in get_next_states(board, GHOST):
+            eval, _ = minimax(state, depth-1, alpha, beta, True)
+            if eval < min_eval:
+                min_eval = eval
+                best_state = state
+            beta = min(beta, eval)
+            if beta <= alpha:
+                break
+        return min_eval, best_state
+
+# Chạy demo
+def run_demo():
+    board = initial_board
+    depth = 4  # độ sâu tìm kiếm
+
+    print("Trạng thái ban đầu:")
+    print_board(board)
+
+    for turn in range(5):
+        score, new_board = minimax(board, depth, float('-inf'), float('inf'), True)
+        if new_board is None:
+            print("Không còn bước đi hợp lệ!")
+            break
+        board = new_board
+        print(f"Lượt {turn+1} - Pacman di chuyển (score={score}):")
+        print_board(board)
+
+        score, new_board = minimax(board, depth, float('-inf'), float('inf'), False)
+        if new_board is None:
+            print("Ma không còn bước đi hợp lệ!")
+            break
+        board = new_board
+        print(f"Lượt {turn+1} - Ma di chuyển (score={score}):")
+        print_board(board)
+
+        if evaluate(board) in [100, -100]:
+            print("Trò chơi kết thúc.")
+            break
+
+run_demo()

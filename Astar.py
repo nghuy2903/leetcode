@@ -39,7 +39,7 @@ def AStar(root : TreeNode, goal):
         print(
             f'{nameNode.ljust(15)}'
             f'{str([f"{n.name}:{c}" for n, c, _ in neighborOfCurrent]).ljust(45)}'
-            f'{[n.name for n, _, _ in queue]}'
+            f'{str([f"{n.name}:{f}" for n, c, f in queue])}'
         )
     print(f'Not find {goal}')
 
