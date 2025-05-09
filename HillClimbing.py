@@ -12,7 +12,6 @@ class TreeNode:
 def HillClimbing(root : TreeNode, goal):
     queue = deque()
     queue.append(root)
-    visited = set()
     print(f'{"Current Node".ljust(15)}{"Neighbor".ljust(20)}{"List"}')
     while(queue):
         current = queue.popleft()
@@ -21,12 +20,10 @@ def HillClimbing(root : TreeNode, goal):
         if nameNode == goal:
             print("Goal")
             return
-        
-        visited.add(current.name)
+    
         neighborOfCurrent = deque()
         for child in current.children:
-            if child.name not in visited:
-                neighborOfCurrent.append(child)
+            neighborOfCurrent.append(child)
         neighborOfCurrent = deque(sorted(neighborOfCurrent, key=lambda node: node.heuristic))
         for node in reversed(neighborOfCurrent):
             queue.appendleft(node)
